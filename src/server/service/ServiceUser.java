@@ -30,11 +30,11 @@ public class ServiceUser {
         MessageModel message = new MessageModel();
         try {
             PreparedStatement ps = conn.prepareStatement(CHECK_USER);
-            System.out.println("Line 33");
+//            System.out.println(getClass() + " Line 33: Inside register");
             ps.setString(1, data.getUserName());
-            ResultSet rs = ps.executeQu33ery();
+            ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                System.out.println("Line 36");
+//                System.out.println(getClass() + " Line 36: Inside register");
                 message.setAction(false);
                 message.setMessage("User already exist!");
                 return message;
@@ -86,29 +86,22 @@ public class ServiceUser {
 
     public UserAccountModel login(LoginModel login) throws SQLException {
         UserAccountModel data = null;
-//        System.out.println("Inside Login");
-//        System.out.println(login.getPassword());
+//        System.out.println(getClass() + "Line 89: Inside Login");
+//        System.out.println(getClass() + " Line 90: password = " + login.getPassword());
         PreparedStatement p = conn.prepareStatement(LOGIN);
-//        System.out.println("Line 86");
+//        System.out.println(getClass() + " Line 92: Inside login");
         p.setString(1, login.getUserName());
-//        System.out.println("Line88");
+//        System.out.println(getClass() + " Line 94: Inside login, UserName = " + login.getUserName());
         p.setString(2, login.getPassword());
-//        System.out.println("Line90");
+//        System.out.println(getClass() + " Line 96: Inside login, password = " + login.getPassword());
         ResultSet r = p.executeQuery();
         if (r.next()) {
-//            System.out.println("Line93");
             int userID = r.getInt(1);
-//            System.out.println("Line95");
             String userName = r.getString(2);
-//            System.out.println("Line97");
             String gender = r.getString(3);
-//            System.out.println("Line99");
             String image = r.getString(4);
-//            System.out.println("Line101");
             int age = r.getInt(5);
-//            System.out.println("Line103");
             data = new UserAccountModel(userID, userName, gender, image, true, age);
-//            System.out.println("Line105");
         }
         r.close();
         p.close();
@@ -118,7 +111,7 @@ public class ServiceUser {
 
     public List<UserAccountModel> getUsers(int existingUser) throws SQLException {
         List<UserAccountModel> list = new ArrayList<>();
-
+//        System.out.println(getClass() + " Line 114: Inside getUsersList");
         PreparedStatement ps = conn.prepareStatement(GET_USER_ACCOUNT);
         ps.setInt(1, existingUser);
         ResultSet rs = ps.executeQuery();
@@ -133,6 +126,7 @@ public class ServiceUser {
         }
         rs.close();
         ps.cancel();
+//        System.out.println(getClass() + " Line 114: Inside getUsersList, list = " + list);
         return list;
     }
 }

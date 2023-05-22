@@ -34,6 +34,7 @@ public class Service {
     }
     
     public void startServer() {
+//        System.out.println(getClass() + " Line 37: Trying to start server");
         Configuration config = new Configuration();
         config.setPort(PORT_NUMBER);
         server = new SocketIOServer(config);
@@ -46,8 +47,10 @@ public class Service {
         server.addEventListener("register", RegisterModel.class , new DataListener<RegisterModel>() {
             @Override
             public void onData(SocketIOClient sioc, RegisterModel t, AckRequest ar) throws Exception {
+//                System.out.println(getClass() + " Line 50: Inside register model event listener");
                 MessageModel message = serviceUser.register(t);
                 ar.sendAckData(message.isAction(), message.getMessage(), message.getData());
+//                System.out.println(getClass() + " Line 53: Message = " + message.getMessage() + " , action = " + message.isAction() + ", data = " + message.getData());
                 if(message.isAction()) {
                     textArea.append("User has Register :" + t.getUserName() + " Pass :" + t.getPassword() + "Age: " + t.getAge() + "\n");
                     server.getBroadcastOperations().sendEvent("list_user", (UserAccountModel) message.getData());
@@ -58,7 +61,9 @@ public class Service {
         server.addEventListener("login", LoginModel.class, new DataListener<LoginModel>() {
             @Override
             public void onData(SocketIOClient sioc, LoginModel t, AckRequest ar) throws Exception {
+//                System.out.println(getClass() + " Line 64: Inside login event listener");
                 UserAccountModel login = serviceUser.login(t);
+//                System.out.println(getClass() + " Line 66");
                 if (login != null) {
                     ar.sendAckData(true, login);
                 } else {
@@ -68,7 +73,8 @@ public class Service {
         });
         server.addEventListener("list_user", Integer.class, new DataListener<Integer>() {
             @Override
-            public void onData(SocketIOClient sioc, Integer userID, AckRequest ar) throws Exception {
+            public void onData(SocketIOClient sioc, Integer userID, AckRequest ar) {
+//                System.out.println(getClass() + " Line 64: Inside getUserDetails event listener");
                 try {
                     List<UserAccountModel> list = serviceUser.getUsers(userID);
                     sioc.sendEvent("list_user", list.toArray());
@@ -78,6 +84,7 @@ public class Service {
             }
         });
         server.start();
+//        System.out.println(getClass() + " Line 86: Server successfully started");
         textArea.append("Server has started on port : " + PORT_NUMBER + "\n");
     }    
 }
