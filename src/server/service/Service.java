@@ -6,9 +6,12 @@ import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
 import com.corundumstudio.socketio.listener.ConnectListener;
 import com.corundumstudio.socketio.listener.DataListener;
+import com.corundumstudio.socketio.listener.DisconnectListener;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JTextArea;
+import server.model.ClientModel;
 import server.model.LoginModel;
 import server.model.MessageModel;
 import server.model.RegisterModel;
@@ -17,6 +20,7 @@ import server.model.UserAccountModel;
 public class Service {
     private static Service instance;
     private SocketIOServer server;
+    private List<ClientModel> clients;
     private JTextArea textArea;
     private ServiceUser serviceUser;
     private static final int PORT_NUMBER = 9999;
@@ -31,6 +35,7 @@ public class Service {
     private Service(JTextArea textArea) {
         this.textArea = textArea;
         serviceUser = new ServiceUser();
+        clients = new ArrayList<>();
     }
     
     public void startServer() {
@@ -54,6 +59,7 @@ public class Service {
                 if(message.isAction()) {
                     textArea.append("User has Register :" + t.getUserName() + " Pass :" + t.getPassword() + "Age: " + t.getAge() + "\n");
                     server.getBroadcastOperations().sendEvent("list_user", (UserAccountModel) message.getData());
+                    addClient(sioc,(UserAccountModel)message.getData());
                 }
             }
         });
@@ -66,6 +72,9 @@ public class Service {
 //                System.out.println(getClass() + " Line 66");
                 if (login != null) {
                     ar.sendAckData(true, login);
+                    System.out.println(getClass() + "Line 75: Inside onData(), active status = " + login.isStatus());
+                    addClient(sioc, login);
+                    userConnect(login.getUserId());
                 } else {
                     ar.sendAckData(false);
                 }
@@ -83,8 +92,45 @@ public class Service {
                 }
             }
         });
+        
+        server.addDisconnectListener(new DisconnectListener() {
+            @Override
+            public void onDisconnect(SocketIOClient sioc) {
+                int userID = removeClient(sioc);
+                if (userID != 0) {
+                    //  removed
+                    userDisconnect(userID);
+                }
+            }
+        });
         server.start();
 //        System.out.println(getClass() + " Line 86: Server successfully started");
         textArea.append("Server has started on port : " + PORT_NUMBER + "\n");
     }    
+    
+    private void userConnect(int userID) {
+        server.getBroadcastOperations().sendEvent("user_status", userID, true);
+    }
+
+    private void userDisconnect(int userID) {
+        server.getBroadcastOperations().sendEvent("user_status", userID, false);
+    }
+
+    private void addClient(SocketIOClient client, UserAccountModel user) {
+        clients.add(new ClientModel(client, user));
+    }
+
+    public int removeClient(SocketIOClient client) {
+        for (ClientModel d : clients) {
+            if (d.getClient() == client) {
+                clients.remove(d);
+                return d.getUser().getUserId();
+            }
+        }
+        return 0;
+    }
+
+    public List<ClientModel> getClients() {
+        return clients;
+    }
 }

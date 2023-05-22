@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import server.dbutil.DBConnection;
+import server.model.ClientModel;
 import server.model.LoginModel;
 import server.model.MessageModel;
 import server.model.RegisterModel;
@@ -121,12 +122,23 @@ public class ServiceUser {
             obj.setGender(rs.getString("gender"));
             obj.setUserId(rs.getInt("user_id"));
             obj.setUserName(rs.getString("user_name"));
-            obj.setStatus(true);
+            obj.setStatus(checkUserStatus(obj.getUserId()));
+            System.out.println(getClass()+" Line 126: active status = "+obj.isStatus());
             list.add(obj);
         }
         rs.close();
         ps.cancel();
 //        System.out.println(getClass() + " Line 114: Inside getUsersList, list = " + list);
         return list;
+    }
+    
+    private boolean checkUserStatus(int userId) {
+        List<ClientModel> clients = Service.getInstance(null).getClients();
+        for(ClientModel client : clients) {
+            if(client.getUser().getUserId() == userId) {
+                return true;
+            }
+        }
+        return false;
     }
 }
