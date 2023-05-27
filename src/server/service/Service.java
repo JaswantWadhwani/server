@@ -14,6 +14,8 @@ import javax.swing.JTextArea;
 import server.model.ClientModel;
 import server.model.LoginModel;
 import server.model.MessageModel;
+import server.model.MessageReceivingModel;
+import server.model.MessageSendingModel;
 import server.model.RegisterModel;
 import server.model.UserAccountModel;
 
@@ -93,6 +95,13 @@ public class Service {
             }
         });
         
+        server.addEventListener("send_to_user", MessageSendingModel.class, new DataListener<MessageSendingModel>() {
+            @Override
+            public void onData(SocketIOClient sioc, MessageSendingModel t, AckRequest ar) throws Exception {
+                sendToClient(t);
+            }
+        });
+        
         server.addDisconnectListener(new DisconnectListener() {
             @Override
             public void onDisconnect(SocketIOClient sioc) {
@@ -118,6 +127,15 @@ public class Service {
 
     private void addClient(SocketIOClient client, UserAccountModel user) {
         clients.add(new ClientModel(client, user));
+    }
+
+    private void sendToClient(MessageSendingModel data) {
+        for (ClientModel c : clients) {
+            if (c.getUser().getUserId() == data.getToUserID()) {
+                c.getClient().sendEvent("receive_ms", new MessageReceivingModel(data.getFromUserID(), data.getText()));
+                break;
+            }
+        }
     }
 
     public int removeClient(SocketIOClient client) {
