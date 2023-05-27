@@ -123,7 +123,7 @@ public class ServiceUser {
             obj.setUserId(rs.getInt("user_id"));
             obj.setUserName(rs.getString("user_name"));
             obj.setStatus(checkUserStatus(obj.getUserId()));
-            System.out.println(getClass()+" Line 126: active status = "+obj.isStatus());
+//            System.out.println(getClass()+" Line 126: active status = "+obj.isStatus());
             list.add(obj);
         }
         rs.close();

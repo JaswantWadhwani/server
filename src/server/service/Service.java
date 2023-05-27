@@ -72,7 +72,7 @@ public class Service {
 //                System.out.println(getClass() + " Line 66");
                 if (login != null) {
                     ar.sendAckData(true, login);
-                    System.out.println(getClass() + "Line 75: Inside onData(), active status = " + login.isStatus());
+//                    System.out.println(getClass() + "Line 75: Inside onData(), active status = " + login.isStatus());
                     addClient(sioc, login);
                     userConnect(login.getUserId());
                 } else {
