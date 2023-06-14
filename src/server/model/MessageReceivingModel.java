@@ -11,6 +11,11 @@ package server.model;
  */
 public class MessageReceivingModel {
     
+    private int fromUserID;
+    private String text;
+    private int senderAge;
+    private int receiverAge;
+
     public int getFromUserID() {
         return fromUserID;
     }
@@ -27,16 +32,27 @@ public class MessageReceivingModel {
         this.text = text;
     }
 
-    public MessageReceivingModel(int fromUserID, String text) {
+    public int getSenderAge() {
+        return senderAge;
+    }
+
+    public void setSenderAge(int senderAge) {
+        this.senderAge = senderAge;
+    }
+
+    public int getReceiverAge() {
+        return receiverAge;
+    }
+
+    public void setReceiverAge(int receiverAge) {
+        this.receiverAge = receiverAge;
+    }
+
+    public MessageReceivingModel(int fromUserID, String text, int senderAge, int receiverAge) {
         this.fromUserID = fromUserID;
         this.text = text;
+        this.senderAge = senderAge;
+        this.receiverAge = receiverAge;
     }
-
-    public MessageReceivingModel() {
-        
-    }
-
-    private int fromUserID;
-    private String text;
 
 }

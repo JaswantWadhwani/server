@@ -18,7 +18,7 @@ public class ServiceUser {
     private final Connection conn;
     private final String INSERT_USER = "insert into users (user_name , password , age) values(?,?,?)";
     private final String CHECK_USER = "select user_id from users where user_name = ?";
-    private final String INSERT_USER_ACCOUNT = "insert into user_account (user_id , user_name) values (?,?)";
+    private final String INSERT_USER_ACCOUNT = "insert into user_account (user_id , user_name , age) values (?,?,?)";
     private final String GET_USER_ACCOUNT = "select user_id, user_name, gender, image_string, age from user_account where status = '1' and user_id <> ?";
     private final String LOGIN = "select user_id, user_account.user_name, gender, image_string , users.age from `users` join user_account using (User_ID) where `users`.User_Name = BINARY(?) and `users`.`Password`= BINARY(?) and user_account.`Status`='1'";
 
@@ -61,6 +61,7 @@ public class ServiceUser {
                 ps = conn.prepareStatement(INSERT_USER_ACCOUNT);
                 ps.setInt(1, userID);
                 ps.setString(2, data.getUserName());
+                ps.setInt(3, data.getAge());
                 ps.execute();
                 ps.close();
                 conn.commit();
@@ -123,12 +124,15 @@ public class ServiceUser {
             obj.setUserId(rs.getInt("user_id"));
             obj.setUserName(rs.getString("user_name"));
             obj.setStatus(checkUserStatus(obj.getUserId()));
+//            System.out.println(obj.getAge());
 //            System.out.println(getClass()+" Line 126: active status = "+obj.isStatus());
             list.add(obj);
         }
         rs.close();
         ps.cancel();
-//        System.out.println(getClass() + " Line 114: Inside getUsersList, list = " + list);
+//        for(UserAccountModel user : list) {
+//            System.out.println(getClass() + " Line 114: Inside getUsersList, list = " + user.getAge());
+//        }
         return list;
     }
     
