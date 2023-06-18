@@ -10,23 +10,25 @@ package server.model;
  * @author Jatin Wadhwani
  */
 public class MessageSendingModel {
-  
     
     private int fromUserID;
     private int toUserID;
     private int senderAge;
     private int receiverAge;
     private String text;
-    
-    public MessageSendingModel() {
-    }
+    private int messageType;
 
-    public MessageSendingModel(int fromUserID, int toUserID, int senderAge, int receiverAge, String text) {
+    public MessageSendingModel() {
+        
+    }
+    
+    public MessageSendingModel(int fromUserID, int toUserID, int senderAge, int receiverAge, String text, int messageType) {
         this.fromUserID = fromUserID;
         this.toUserID = toUserID;
         this.senderAge = senderAge;
         this.receiverAge = receiverAge;
         this.text = text;
+        this.messageType = messageType;
     }
 
     public int getFromUserID() {
@@ -68,4 +70,13 @@ public class MessageSendingModel {
     public void setText(String text) {
         this.text = text;
     }
+
+    public int getMessageType() {
+        return messageType;
+    }
+
+    public void setMessageType(int messageType) {
+        this.messageType = messageType;
+    }
+    
 }

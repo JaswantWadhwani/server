@@ -136,7 +136,7 @@ public class Service {
         for (ClientModel c : clients) {
             if (c.getUser().getUserId() == data.getToUserID()) {
 //                System.out.println("Line 138: "+data.getAge());
-                c.getClient().sendEvent("receive_ms", new MessageReceivingModel(data.getFromUserID(), data.getText(), data.getSenderAge(), data.getReceiverAge()));
+                c.getClient().sendEvent("receive_ms", new MessageReceivingModel(data.getFromUserID(), data.getText(), data.getSenderAge(), data.getReceiverAge(), data.getMessageType()));
 //                System.out.println("Line 140: fromUserId = " + data.getFromUserID() + " text = " + data.getText() + " sender's age =  " + data.getSenderAge()+ " receiver's age = " + c.getUser().getAge());
 //                System.out.println(getClass() + "Line 141: fromUserId = " + data.getFromUserID() + " text = " + data.getText() + " sender's age =  " + data.getSenderAge()+ " receiver's age = " + data.getReceiverAge());
                 break;

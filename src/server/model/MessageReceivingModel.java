@@ -15,6 +15,19 @@ public class MessageReceivingModel {
     private String text;
     private int senderAge;
     private int receiverAge;
+    private int messageType;
+
+    public MessageReceivingModel() {
+        
+    }
+    
+    public MessageReceivingModel(int fromUserID, String text, int senderAge, int receiverAge, int messageType) {
+        this.fromUserID = fromUserID;
+        this.text = text;
+        this.senderAge = senderAge;
+        this.receiverAge = receiverAge;
+        this.messageType = messageType;
+    }
 
     public int getFromUserID() {
         return fromUserID;
@@ -48,11 +61,13 @@ public class MessageReceivingModel {
         this.receiverAge = receiverAge;
     }
 
-    public MessageReceivingModel(int fromUserID, String text, int senderAge, int receiverAge) {
-        this.fromUserID = fromUserID;
-        this.text = text;
-        this.senderAge = senderAge;
-        this.receiverAge = receiverAge;
+    public int getMessageType() {
+        return messageType;
     }
 
+    public void setMessageType(int messageType) {
+        this.messageType = messageType;
+    }
+
+    
 }
